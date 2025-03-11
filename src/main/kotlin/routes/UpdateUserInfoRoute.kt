@@ -5,6 +5,7 @@ import com.daccvo.domain.model.Endpoint
 import com.daccvo.domain.model.UserSession
 import com.daccvo.domain.model.UserUpdate
 import com.daccvo.repository.UserRepository
+import com.daccvo.utils.Logs
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -14,7 +15,6 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 
 fun Route.updateUserInfoRoute(
-    app : Application,
     userRepository: UserRepository
 ){
 
@@ -23,7 +23,7 @@ fun Route.updateUserInfoRoute(
             val userSession = call.principal<UserSession>()
             val userUpdate = call.receive<UserUpdate>()
             if (userSession == null){
-                app.log.info("erreur de session")
+                Logs.logs("erreur de session")
                 call.respondRedirect(Endpoint.Unauthorized.path)
             }else{
                 try {
@@ -35,7 +35,7 @@ fun Route.updateUserInfoRoute(
                     )
 
                     if (response){
-                        app.log.info("update reussi")
+                        Logs.logs("update reussi")
                         call.respond(
                             message = ApiResponse(
                                 success = true,
@@ -44,7 +44,7 @@ fun Route.updateUserInfoRoute(
                             status = HttpStatusCode.OK
                         )
                     }else{
-                        app.log.info("erreur update")
+                        Logs.logs("erreur update")
                         call.respond(
                             message = ApiResponse(success = false),
                             status = HttpStatusCode.BadRequest
@@ -52,7 +52,7 @@ fun Route.updateUserInfoRoute(
                     }
 
                 }catch (e : Exception) {
-                    app.log.info("Impossible d'update : ${e.message}")
+                    Logs.logs("Impossible d'update : ${e.message}")
                 }
 
             }

@@ -39,4 +39,5 @@ dependencies {
 
     // Google Client API Library
     implementation("com.google.api-client:google-api-client:1.34.0")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 }

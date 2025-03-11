@@ -7,6 +7,7 @@ import com.daccvo.domain.model.UserSession
 import com.daccvo.repository.UserRepository
 import com.daccvo.utils.Constants.AUDIENCE
 import com.daccvo.utils.Constants.ISSUER
+import com.daccvo.utils.Logs
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.http.javanet.NetHttpTransport
@@ -19,7 +20,6 @@ import io.ktor.server.sessions.*
 import io.ktor.util.pipeline.*
 
 fun Route.tokenVerificationRoute(
-    app : Application,
     userRepository: UserRepository
 ){
 
@@ -41,18 +41,18 @@ fun Route.tokenVerificationRoute(
 
                 val response = userRepository.saveUserInfo(user)
                 if (response) {
-                    app.log.info("Verification du token reussi : $name, $emailAddress")
+                    Logs.logs("Verification du token reussi : $name, $emailAddress")
                     call.sessions.set(UserSession(id = sub , name = name ))
                     call.respondRedirect(Endpoint.Authorized.path)
                 } else {
                     call.respondRedirect(Endpoint.Unauthorized.path)
                 }
             } else {
-                app.log.info("Verification du token echoue")
+                Logs.logs("Verification du token echoue")
                 call.respondRedirect(Endpoint.Unauthorized.path)
             }
         }else {
-            app.log.info("Token non specifier")
+            Logs.logs("Token non specifier")
             call.respondRedirect(Endpoint.Unauthorized.path)
         }
 

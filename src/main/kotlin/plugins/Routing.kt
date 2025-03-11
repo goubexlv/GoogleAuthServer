@@ -11,12 +11,12 @@ fun Application.configureRouting() {
     routing {
         val userRepository : UserRepository by application.inject()
         rootRoute()
-        getUserInfoRoute(application,userRepository)
-        updateUserInfoRoute(application,userRepository)
-        deleteUserRoute(application,userRepository)
+        getUserInfoRoute(userRepository)
+        updateUserInfoRoute(userRepository)
+        deleteUserRoute(userRepository)
         signOutRoute()
         authorizedRoute()
         unauthorizedRoute()
-        tokenVerificationRoute(application,userRepository)
+        tokenVerificationRoute(userRepository)
     }
 }

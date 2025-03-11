@@ -4,6 +4,7 @@ import com.daccvo.domain.model.ApiResponse
 import com.daccvo.domain.model.Endpoint
 import com.daccvo.domain.model.UserSession
 import com.daccvo.repository.UserRepository
+import com.daccvo.utils.Logs
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -12,14 +13,13 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.getUserInfoRoute(
-    app : Application,
     userRepository: UserRepository
 ){
     authenticate ("auth-session") {
         get(Endpoint.GetUserInfo.path){
             val userSession = call.principal<UserSession>()
             if(userSession == null){
-                app.log.info("session invalide")
+                Logs.logs("session invalide")
                 call.respondRedirect(Endpoint.Unauthorized.path)
             }else {
                 try{
@@ -32,7 +32,7 @@ fun Route.getUserInfoRoute(
                     )
 
                 } catch (e : Exception) {
-                    app.log.info("Erreur lors de la recuperation : ${e.message}")
+                    Logs.logs("Erreur lors de la recuperation : ${e.message}")
                     call.respondRedirect(Endpoint.Unauthorized.path)
                 }
             }
